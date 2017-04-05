@@ -1,2 +1,2 @@
 # FlinkHack
-Simple app for Twitter steam processing and visualization with Twitter API, Apache Flink, ElasticSearch and Grafana. 
+Simple app for tweet stream real-time processing and visualization with Twitter API, Apache Flink, ElasticSearch and Grafana. 
