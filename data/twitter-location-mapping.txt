@@ -1,0 +1,11 @@
+{
+ "twitter-location" :
+ 	{"properties" :
+ 		{
+ 			"hashtag": {"type": "string"},
+ 			"cnt": {"type": "integer"},
+ 			"location": {"type": "geo_point"},
+ 			"time": {"type": "date", "format": "yyyy-MM-dd"}
+ 		}
+ 	}
+ }
