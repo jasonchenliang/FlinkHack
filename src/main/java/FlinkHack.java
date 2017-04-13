@@ -121,10 +121,10 @@ public class FlinkHack {
       json.put("hashtag", record.f0);      // hashtag
       json.put("followers_count", record.f1.toString());          // followers count
       json.put("location", record.f2 + "," + record.f3);  // lat,lon pair
-      if (record.f4 != null) {
-        json.put("time",
-            outputDateFormat.format(record.f4));  //current time, TODO:  Might want to parse twitter hashtag time.
-      }
+//      if (record.f4 != null) {
+//        json.put("time",
+//            outputDateFormat.format(record.f4));  //current time, TODO:  Might want to parse twitter hashtag time.
+//      }
       json.put("count", record.f5.toString()); //count of the hashtag so far
       IndexRequest rqst = Requests.indexRequest().index("flink-twits")        // index name
           .type("twitter-location")  // mapping name
