@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.RuntimeContext;
-import org.apache.flink.api.java.tuple.Tuple5;
+import org.apache.flink.api.java.tuple.Tuple6;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -43,8 +43,9 @@ public class FlinkHack {
     env.setParallelism(params.getInt("parallelism", 1));
 
     final DataStream<String> streamSource = env.addSource(new TwitterSource(properties));
-    DataStream<Tuple5<String, Integer, Double, Double, Date>> dataStream =
-        streamSource.flatMap(new HashtagTokenizeFlatMap()).keyBy(0).sum(1);
+    DataStream<Tuple6<String, Integer, Double, Double, Date, Integer>> dataStream =
+        streamSource.flatMap(new HashtagTokenizeFlatMap()).keyBy(0).sum(5);
+    dataStream.print();
 
     Map<String, String> config = new HashMap<>();
     // This instructs the sink to emit after every element, otherwise they would be buffered
@@ -60,7 +61,7 @@ public class FlinkHack {
   }
 
   public static class HashtagTokenizeFlatMap
-      implements FlatMapFunction<String, Tuple5<String, Integer, Double, Double, Date>> {
+      implements FlatMapFunction<String, Tuple6<String, Integer, Double, Double, Date, Integer>> {
     private static final long serialVersionUID = 1L;
     private transient ObjectMapper jsonParser;
 
@@ -68,7 +69,7 @@ public class FlinkHack {
      * Select the language from the incoming JSON text
      */
     @Override
-    public void flatMap(String value, Collector<Tuple5<String, Integer, Double, Double, Date>> out) throws Exception {
+    public void flatMap(String value, Collector<Tuple6<String, Integer, Double, Double, Date, Integer>> out) throws Exception {
       if (jsonParser == null) {
         jsonParser = new ObjectMapper();
       }
@@ -90,12 +91,12 @@ public class FlinkHack {
                 new StringTokenizer(jsonNode.get("entities").get("hashtags").get(i).get("text").asText());
             while (tokenizer.hasMoreTokens()) {
               String result = tokenizer.nextToken().replaceAll("\\s*", "").toLowerCase();
-              int count = 0;
+              int followersCount = 0;
               if (jsonNode.get("user").has("followers_count")) {
-                count = jsonNode.get("user").get("followers_count").asInt(0);
+                followersCount = jsonNode.get("user").get("followers_count").asInt(0);
               }
               if (!result.equals("")) {
-                out.collect(new Tuple5<>(result, count, latitude, longitude, createdDate));
+                out.collect(new Tuple6<>(result, followersCount, latitude, longitude, createdDate,1));
               }
             }
           }
@@ -108,22 +109,23 @@ public class FlinkHack {
    * Inserts popular places into the "nyc-places" index.
    */
   public static class TwitterInserter
-      implements ElasticsearchSinkFunction<Tuple5<String, Integer, Double, Double, Date>> {
+      implements ElasticsearchSinkFunction<Tuple6<String, Integer, Double, Double, Date, Integer>> {
 
     // construct index request
     @Override
-    public void process(Tuple5<String, Integer, Double, Double, Date> record, RuntimeContext ctx,
+    public void process(Tuple6<String, Integer, Double, Double, Date, Integer> record, RuntimeContext ctx,
                         RequestIndexer indexer) {
 
       // construct JSON document to index
       Map<String, String> json = new HashMap<>();
-      json.put("hashtag", record.f0.toString());      // hashtag
-      json.put("cnt", record.f1.toString());          // follower count(occurences)
+      json.put("hashtag", record.f0);      // hashtag
+      json.put("followers_count", record.f1.toString());          // followers count
       json.put("location", record.f2 + "," + record.f3);  // lat,lon pair
       if (record.f4 != null) {
         json.put("time",
             outputDateFormat.format(record.f4));  //current time, TODO:  Might want to parse twitter hashtag time.
       }
+      json.put("count", record.f5.toString()); //count of the hashtag so far
       IndexRequest rqst = Requests.indexRequest().index("flink-twits")        // index name
           .type("twitter-location")  // mapping name
           .source(json);
