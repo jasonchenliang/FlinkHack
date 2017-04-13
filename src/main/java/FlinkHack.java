@@ -91,8 +91,8 @@ public class FlinkHack {
             while (tokenizer.hasMoreTokens()) {
               String result = tokenizer.nextToken().replaceAll("\\s*", "").toLowerCase();
               int count = 0;
-              if (jsonNode.get("followers_count") != null) {
-                count = jsonNode.get("followers_count").asInt(0);
+              if (jsonNode.get("user").has("followers_count")) {
+                count = jsonNode.get("user").get("followers_count").asInt(0);
               }
               if (!result.equals("")) {
                 out.collect(new Tuple5<>(result, count, latitude, longitude, createdDate));
