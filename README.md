@@ -11,8 +11,9 @@ curl -XPUT 'http://localhost:9200/flink-twits'
 curl -XPUT 'http://localhost:9200/flink-twits/_mapping/twitter-location' --data-ascii '@twitter-location-mapping.txt'
 
 Steps:
-1> Run Flink
-2> Run Elasticsearch
-3> Import the Index and the Mapping
-4> Run Kibana
-5> Import the export.jason
+1> Run Elasticsearch
+2> Import the Index and the Mapping
+3> Run Flink
+4> Submit the jar to Flink Cloud
+5> Run Kibana
+6> Import the export.jason, set kibana to refresh the dashboard every 5 seconds
