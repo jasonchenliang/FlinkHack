@@ -1,11 +1,11 @@
 # FlinkHack
-Simple app for tweet stream real-time processing and visualization with Twitter API.
+Real-time tweet stream processing and visualization app with [Twitter Streaming APIs](https://dev.twitter.com/streaming/overview).
 ### Requirements
 | Tool | Version|
 | ------ | ------ |
 | Apache Flink | [1.2.0](http://archive.apache.org/dist/flink/flink-1.2.0/flink-1.2.0-bin-hadoop2-scala_2.10.tgz) |
 | Elasticsearch| [2.4.2](https://www.elastic.co/downloads/past-releases/elasticsearch-2-4-2) | 
-| Kibana | [4.5.4](https://github.com/elastic/kibana/archive/v4.5.4.zip) |
+| Kibana | [4.6.4](https://www.elastic.co/downloads/past-releases/kibana-4-6-4) |
 
 ### Steps
 1. Start Elasticsearch 
