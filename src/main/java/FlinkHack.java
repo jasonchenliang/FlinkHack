@@ -18,10 +18,11 @@ import org.apache.flink.streaming.connectors.elasticsearch2.ElasticsearchSinkFun
 import org.apache.flink.streaming.connectors.elasticsearch2.RequestIndexer;
 import org.apache.flink.streaming.connectors.twitter.TwitterSource;
 import org.apache.flink.util.Collector;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.Requests;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FlinkHack {
   public static void main(String[] args) throws Exception {
