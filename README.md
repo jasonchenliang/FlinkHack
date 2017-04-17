@@ -3,9 +3,9 @@ Simple app for tweet stream real-time processing and visualization with Twitter 
 ### Requirements
 | Tool | Version|
 | ------ | ------ |
-| Apache Flink | 1.2 |
-| Elasticsearch| 2.4.2 | 
-| Kibana | 4.5.4 |
+| Apache Flink | [1.2.0](http://archive.apache.org/dist/flink/flink-1.2.0/) |
+| Elasticsearch| [2.4.2](https://www.elastic.co/downloads/past-releases/elasticsearch-2-4-2) | 
+| Kibana | [4.5.4](https://github.com/elastic/kibana/archive/v4.5.4.zip) |
 
 ### Steps
 1. Start Elasticsearch 
