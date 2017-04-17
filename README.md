@@ -7,20 +7,25 @@ Simple app for tweet stream real-time processing and visualization with Twitter 
 | Elasticsearch| 2.4.2 | 
 | Kibana | 4.5.4 |
 
-Commands to create index and mapping
+### Steps
+1. Start Elasticsearch 
+* Run `bin/elasticsearch` on Unix, or `bin\elasticsearch.bat` on Windows
+
+2. Import the Index and the Mapping to Elasticsearch
 ```sh
 curl -XDELETE localhost:9200/flink-twits
-```
-```sh
 curl -XPUT 'http://localhost:9200/flink-twits'
+curl -XPUT 'http://localhost:9200/flink-twits/_mapping/twitter-location' --data-ascii '@data/twitter-location-mapping.txt'
 ```
-```sh
-curl -XPUT 'http://localhost:9200/flink-twits/_mapping/twitter-location' --data-ascii '@twitter-location-mapping.txt'
-```
-### Steps
-1. Run Elasticsearch 
-1. Import the Index and the Mapping
-1. Run Flink 
-1. Submit the jar to Flink Cloud 
-1. Run Kibana 
-1. Import the export.json, set kibana to refresh the dashboard every 5 seconds
+3. Package the FlinkHack
+  ```sh
+  mvn clean package
+  ```
+4. Start Flink
+* Run `bin/start-local` on Unix, or `bin\start-local.bat` on Windows
+* Visit [http://localhost:8081](http://localhost:8081)
+* Submit the new Job with `FlinkHack-1.0-SNAPSHOT.jar`
+5. Start Kibana 
+* Run `bin/kibana` on Unix, or `bin\kibana.bat` on Windows
+* Visit [http://localhost:5601](http://localhost:5601)
+6. Import the data/export.json, set Kibana to refresh the dashboard every 5 seconds
